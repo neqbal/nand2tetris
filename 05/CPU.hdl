@@ -1,0 +1,99 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+/**
+ * The Hack Central Processing unit (CPU).
+ * Parses the binary code in the instruction input and executes it according to the
+ * Hack machine language specification. In the case of a C-instruction, computes the
+ * function specified by the instruction. If the instruction specifies to read a memory
+ * value, the inM input is expected to contain this value. If the instruction specifies
+ * to write a value to the memory, sets the outM output to this value, sets the addressM
+ * output to the target address, and asserts the writeM output (when writeM == 0, any
+ * value may appear in outM).
+ * If the reset input is 0, computes the address of the next instruction and sets the
+ * pc output to that value. If the reset input is 1, sets pc to 0.
+ * Note: The outM and writeM outputs are combinational: they are affected by the
+ * instruction's execution during the current cycle. The addressM and pc outputs are
+ * clocked: although they are affected by the instruction's execution, they commit to
+ * their new values only in the next cycle.
+ */
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to restart the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // Address of next instruction
+
+    PARTS:
+    //// Replace this comment with your code.
+    
+    //computing A or C instruction
+    Not(in = instruction[15], out = Ains);
+    Mux16(a = instruction, b = aluout, sel = chooseA3, out = Areg);
+    
+    //putting value in A register
+    ARegister(in = Areg, load = writeA, out = A, out[0..14] = addressM);
+    
+    // selecting A or M depending on 12th bit of C instruction
+    And(a = instruction[15], b = instruction[12], out = computeAorM);
+    Mux16(a = A, b = inM, sel = computeAorM, out = selectAorM);
+
+    //selecting address for ALU output
+    DMux8Way(in = instruction[15], sel = instruction[3..5], b = selM, c=selD, d = selMD, e = selA, f = selAM, g = selAD, h = selAMD);
+
+    //checking if A is address 
+    Or(a = selA, b = selAM, out = chooseA1);
+    Or(a = chooseA1, b = selAD, out = chooseA2);
+    Or(a = chooseA2, b = selAMD, out = chooseA3);
+    Or(a = chooseA3, b = Ains, out = writeA);
+
+    //checking if D is address
+    Or(a = selD, b = selMD, out = chooseD1);
+    Or(a = chooseD1, b = selAD, out = chooseD2);
+    Or(a = chooseD2, b = selAMD, out = writeD);
+
+    //checking if M is address
+    Or(a = selM, b = selMD, out = chooseM1);
+    Or(a = chooseM1, b = selAM, out = chooseM2);
+    Or(a = chooseM2, b = selAMD, out = writeM);
+
+    //writing in D register
+    DRegister(in = aluout, load = writeD, out = D);
+
+    //computing alu
+    ALU(x = D, y = selectAorM, zx = instruction[11], nx = instruction[10], zy = instruction[9], ny = instruction[8], f = instruction[7], no = instruction[6], out = computeout, zr = zero, ng = negative);
+
+    Or16(a = computeout, b[15] = negative, b[0..14] = false, out = aluout, out = outM);
+    
+    //computing program counter
+    DMux4Way(in = true, sel[0] = negative, sel[1] = zero, a = gt, b = lt, c = zer);
+    Xor(a = gt, b = zer, out = gte);
+    Xor(a = lt, b = zer, out = lte);
+    Not(in = zer, out = nzero);
+
+    DMux8Way(in = instruction[15], sel = instruction[0..2], b = JGT, c = JEQ, d = JGE, e = JLT, f = JNE, g = JLE, h = JMP);
+
+    And(a = gt, b = JGT, out = JGTtr);
+    And(a = lt, b = JLT, out = JLTtr);
+    And(a = gte, b = JGE, out = JGEtr);
+    And(a = lte, b = JLE, out = JLEtr);
+    And(a = zer, b = JEQ, out = JEQtr);
+    And(a = nzero, b = JNE, out = JNEtr);
+
+    Or(a = JGTtr, b = JLTtr, out = oupc1);
+    Or(a = oupc1, b = JGEtr, out = oupc2);
+    Or(a = oupc2, b = JLEtr, out = oupc3);
+    Or(a = oupc3, b = JEQtr, out = oupc4);
+    Or(a = oupc4, b = JNEtr, out = oupc5);
+    Or(a = oupc5, b = JMP, out = oupc6);
+    
+    Not(in = reset, out = notreset);
+    PC(in = A, load = oupc6, inc = notreset, reset = reset, out[0..14] = pc);
+}
