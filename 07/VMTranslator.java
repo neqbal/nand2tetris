@@ -18,7 +18,7 @@ class VMTranslator {
         }
 
         try {
-            File obj = new File("./StackArithmetic/SimpleAdd/SimpleAdd.asm");
+            File obj = new File("./StackArithmetic/StackTest/StackTest.asm");
             if(obj.createNewFile()) System.out.println("file created");
             else System.out.println("file already exists");
         } catch (IOException e){
@@ -27,7 +27,8 @@ class VMTranslator {
         }
 
         try {
-            FileWriter obj = new FileWriter("./StackArithmetic/SimpleAdd/SimpleAdd.asm");
+            FileWriter obj = new FileWriter("./StackArithmetic/StackTest/StackTest.asm")
+            ;
             for(String s: hack) {
                 obj.write(s);
             }
@@ -40,7 +41,7 @@ class VMTranslator {
 
     public static void main(String args[]) {
         VMTranslator vmt = new VMTranslator();
-        File obj = new File("./StackArithmetic/SimpleAdd/SimpleAdd.vm");
+        File obj = new File("./StackArithmetic/StackTest/StackTest.vm");
         try {
             Scanner sc = new Scanner(obj);
             while(sc.hasNextLine()) {
