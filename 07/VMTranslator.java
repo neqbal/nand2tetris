@@ -14,11 +14,13 @@ class VMTranslator {
         for(String s: lines) {
             String str[] = s.split(" ");
             String assembled = vm.command(str);
+            System.out.println(assembled);
             hack.add(assembled);
         }
+        hack.add("(stop)\n@stop\n0;JMP");
 
         try {
-            File obj = new File("./StackArithmetic/StackTest/StackTest.asm");
+            File obj = new File("./MemoryAccess/PointerTest/PointerTest.asm");
             if(obj.createNewFile()) System.out.println("file created");
             else System.out.println("file already exists");
         } catch (IOException e){
@@ -27,8 +29,7 @@ class VMTranslator {
         }
 
         try {
-            FileWriter obj = new FileWriter("./StackArithmetic/StackTest/StackTest.asm")
-            ;
+            FileWriter obj = new FileWriter("./MemoryAccess/PointerTest/PointerTest.asm");
             for(String s: hack) {
                 obj.write(s);
             }
@@ -40,8 +41,9 @@ class VMTranslator {
     }
 
     public static void main(String args[]) {
+        System.out.println("akjsndkjasbndkj");
         VMTranslator vmt = new VMTranslator();
-        File obj = new File("./StackArithmetic/StackTest/StackTest.vm");
+        File obj = new File("./MemoryAccess/PointerTest/PointerTest.vm");
         try {
             Scanner sc = new Scanner(obj);
             while(sc.hasNextLine()) {
