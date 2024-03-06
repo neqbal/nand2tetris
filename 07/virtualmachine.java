@@ -3,8 +3,8 @@ public class virtualmachine {
     public String command(String[] ins) {
         String c = "";
         String jump = "";
-        System.out.println(ins[0]);
-        if (ins[0].equals("eq")){ jump += "JEQ"; System.out.println(ins[0]);}
+        //System.out.println(ins[0]);
+        if (ins[0].equals("eq")) jump += "JEQ";
         else if(ins[0].equals("lt")) jump += "JLT";
         else if(ins[0].equals("gt")) jump += "JGT";
 
@@ -94,7 +94,7 @@ public class virtualmachine {
     public String seg(String instruction, String []ins) {
         String r = "";
         String c = "";
-        System.out.println(ins[0]);
+        //System.out.println(ins[0]);
         switch(ins[1]) {
             case "constant":
                 c += "@" + ins[2] + "\n";
@@ -130,6 +130,8 @@ public class virtualmachine {
             case "pointer":
                 r += "@R" + Integer.toString(3 + Integer.parseInt(ins[2])) + "\n";
                 break;
+            case "static":
+                r += "@" + Integer.toString(16 + Integer.parseInt(ins[2])) + "\n";
 
         }
         switch(instruction) {

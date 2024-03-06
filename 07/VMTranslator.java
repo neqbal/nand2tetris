@@ -20,7 +20,7 @@ class VMTranslator {
         hack.add("(stop)\n@stop\n0;JMP");
 
         try {
-            File obj = new File("./MemoryAccess/PointerTest/PointerTest.asm");
+            File obj = new File("./MemoryAccess/StaticTest/StaticTest.asm");
             if(obj.createNewFile()) System.out.println("file created");
             else System.out.println("file already exists");
         } catch (IOException e){
@@ -29,7 +29,7 @@ class VMTranslator {
         }
 
         try {
-            FileWriter obj = new FileWriter("./MemoryAccess/PointerTest/PointerTest.asm");
+            FileWriter obj = new FileWriter("./MemoryAccess/StaticTest/StaticTest.asm");
             for(String s: hack) {
                 obj.write(s);
             }
@@ -41,9 +41,9 @@ class VMTranslator {
     }
 
     public static void main(String args[]) {
-        System.out.println("akjsndkjasbndkj");
+        //System.out.println("akjsndkjasbndkj");
         VMTranslator vmt = new VMTranslator();
-        File obj = new File("./MemoryAccess/PointerTest/PointerTest.vm");
+        File obj = new File("./MemoryAccess/StaticTest/StaticTest.vm");
         try {
             Scanner sc = new Scanner(obj);
             while(sc.hasNextLine()) {

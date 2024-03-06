@@ -366,3 +366,6 @@ A=M
 M=!M
 @SP
 M=M+1
+(stop)
+@stop
+0;JMP
