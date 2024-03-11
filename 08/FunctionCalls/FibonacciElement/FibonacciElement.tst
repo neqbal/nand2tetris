@@ -11,6 +11,8 @@ load FibonacciElement.asm,
 output-file FibonacciElement.out,
 compare-to FibonacciElement.cmp,
 
+set RAM[0] 261,
+
 repeat 6000 {
 	ticktock;
 }
