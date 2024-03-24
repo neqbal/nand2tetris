@@ -9,22 +9,27 @@ import java.util.Scanner;
 
 class VMTranslator {
     static List<String> lines = new ArrayList<>();
+    static List<String> hack = new ArrayList<>();
     static int sys = 0;
-    public void converter() {
+    static int ret = -1, label = -1;
+    public void converter(String name) {
         virtualmachine vm = new virtualmachine();
-        List<String> hack = new ArrayList<>();
-        hack.add("@Sys.init\n0;JMP\n");
+        
         for(String s: lines) {
             String str[] = s.split(" ");
-            System.out.println(str[0]);
+            //System.out.println(str[0]);
+            if(str[0].equals("call")) ret++;
+            if(str[0].equals("lt") || str[0].equals("eq") || str[0].equals("gt") || str[0].equals("neg")) label++;
+
             //for(String o: str) System.out.print(o);
-            String assembled = vm.command(str);
+            String assembled = vm.command(str, name, ret, label);
             hack.add(assembled);
         }
-        hack.add("(stop)\n@stop\n0;JMP");
+    }
 
+    public void write() {
         try {
-            File obj = new File("./FunctionCalls/FibonacciElement/FibonacciElement.asm");
+            File obj = new File("./FunctionCalls/StaticsTest/StaticsTest.asm");
             if(obj.createNewFile()) System.out.println("file created");
             else System.out.println("file already exists");
         } catch (IOException e){
@@ -33,7 +38,7 @@ class VMTranslator {
         }
 
         try {
-            FileWriter obj = new FileWriter("./FunctionCalls/FibonacciElement/FibonacciElement.asm");
+            FileWriter obj = new FileWriter("./FunctionCalls/StaticsTest/StaticsTest.asm");
             for(String s: hack) {
                 obj.write(s);
             }
@@ -47,15 +52,24 @@ class VMTranslator {
     public static void main(String args[]) {
         //System.out.println("akjsndkjasbndkj");
         VMTranslator vmt = new VMTranslator();
-        File dir = new File("./FunctionCalls/FibonacciElement/");
+        File dir = new File("./FunctionCalls/StaticsTest/");
         File[] files = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.toLowerCase().endsWith(".vm");
             }
         });
+        //String temp = "./FunctionCalls/SimpleFunction" + "/" + "Sys" + ".vm";
+
 /*         for(int i=0; i<args.length; ++i) {
             if(args[i].equals("Sys.vm")) sys=1;
         } */
+        for(int k=0; k<files.length; ++k) {
+            if(files[k].getName().equals("Sys" + ".vm")) {
+                hack.add("@261\nD=A\n@SP\nM=D\n@LCL\nM=D\n");
+                hack.add("@Sys.init\n0;JMP\n");
+            }
+        }
+
         for(int j=0; j<files.length; ++j) {
             try {
                 Scanner sc = new Scanner(files[j]);
@@ -77,7 +91,13 @@ class VMTranslator {
                 System.out.println("Scanner error");
                 e.printStackTrace();
             } 
-            vmt.converter();
+            vmt.converter(files[j].getName());
+            lines.clear();
+            //hack.add("lol\n");
+            System.out.println(files[j].getName());  
         }
+        vmt.write();
+        //hack.add("(stop)\n@stop\n0;JMP\n");
+        
     } 
 }

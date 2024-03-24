@@ -1,12 +1,11 @@
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
-// File name: projects/08/FunctionCalls/StaticsTest/StaticsTestVME.tst
+// File name: projects/8/FunctionCalls/StaticsTest/StaticsTestVME.tst
 
-// Tests / illustrates the statics test, by executing the set and get functions
-// in the VM emulator.
+// Tests and illustrates the statics test on the VM emulator.
 
-load,  // loads all the VM files from the current folder.
+load,  // loads all the VM files from the current folder
 output-file StaticsTest.out,
 compare-to StaticsTest.cmp,
 

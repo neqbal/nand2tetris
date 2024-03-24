@@ -1,9 +1,9 @@
 public class virtualmachine {
-    int label = 0;
+    //int label = 0;
     String cond = "";
-    int ret = 0;
+    //int ret = 0;
     String jump = "";
-    public String command(String[] ins) {
+    public String command(String[] ins, String name, int ret, int label) {
         String c = "";
         //System.out.println(ins[0]);
         if (ins[0].equals("eq")) {jump += "JEQ"; cond = jump;}
@@ -14,6 +14,14 @@ public class virtualmachine {
         switch(ins[0]) {
             case "function":
                 c += "(" + ins[1] + ")\n";
+                int local = Integer.parseInt(ins[2]);
+                for(int i=0; i<local; ++i) {
+                    c += "@SP\n";
+                    c += "A=M\n";
+                    c += "M=0\n";
+                    c += "@SP\n";
+                    c += "M=M+1\n"; 
+                } 
                 break;
             case "call":
                 c += "//FUNCTION CALL START\n";
@@ -72,22 +80,25 @@ public class virtualmachine {
                 c += "0;JMP\n";
                 c += "(return" + Integer.toString(ret) + ")\n";
                 c += "//FUNCTION CALL END\n";
-                ret++;
+                //ret++;
+                System.out.println(ret);
+                System.out.println(c);
+                System.out.println("******************************************\n********\n********\n*****");
                 break;
 
             case "return":
                 
                 c += "@LCL\n";
                 c += "D=M\n";
-                c += "@frame\n";
+                c += "@R14\n"; //frame
                 c += "M=D\n";
-                c += "@frame\n";
+                c += "@R14\n"; //frame
                 c += "D=M\n";
                 c += "@5\n";
                 c += "D=D-A\n";
                 c += "A=D\n";
                 c += "D=M\n";
-                c += "@ret\n";
+                c += "@R15\n"; //ret
                 c += "M=D\n";
                 c += "@SP\n";
                 c += "M=M-1\n";
@@ -100,31 +111,31 @@ public class virtualmachine {
                 c += "D=M+1\n";
                 c += "@SP\n";
                 c += "M=D\n";
-                c += "@frame\n";
+                c += "@R14\n"; //frame
                 c += "M=M-1\n";
                 c += "A=M\n";
                 c += "D=M\n";
                 c += "@THAT\n";
                 c += "M=D\n";
-                c += "@frame\n";
+                c += "@R14\n";  //frame
                 c += "M=M-1\n";
                 c += "A=M\n";
                 c += "D=M\n";
                 c += "@THIS\n";
                 c += "M=D\n";
-                c += "@frame\n";
+                c += "@R14\n";  //frame
                 c += "M=M-1\n";
                 c += "A=M\n";
                 c += "D=M\n";
                 c += "@ARG\n";
                 c += "M=D\n";
-                c += "@frame\n";
+                c += "@R14\n";  //frame
                 c += "M=M-1\n";
                 c += "A=M\n";
                 c += "D=M\n";
                 c += "@LCL\n";
                 c += "M=D\n";
-                c += "@ret\n";
+                c += "@R15\n"; //ret
                 c += "A=M\n";
                 c += "0;JMP\n";
                 break;
@@ -152,7 +163,7 @@ public class virtualmachine {
             
             case "push":
             case "pop":
-                c = seg(ins[0], ins);
+                c = seg(ins[0], ins, name);
                 break;
             case "add":
                 c = add(ins);
@@ -168,7 +179,7 @@ public class virtualmachine {
                 c += "M=-M\n";
                 c += "@SP\n";
                 c += "M=M+1\n";
-                label++;
+                //label++;
                 //System.out.println(label);
                 break;
 
@@ -227,7 +238,7 @@ public class virtualmachine {
                 c += "(true" + Integer.toString(label) + ")\n";
                 c += "@SP\n";
                 c += "M=M+1\n";
-                label++;
+                //label++;
                 //System.out.println(label);
                 break;    
 
@@ -249,7 +260,7 @@ public class virtualmachine {
                 c += "(true" + Integer.toString(label) + ")\n";
                 c += "@SP\n";
                 c += "M=M+1\n";
-                label++;
+                //label++;
                 //System.out.println(label);
                 break; 
             case "lt" :
@@ -270,14 +281,14 @@ public class virtualmachine {
                 c += "(true" + Integer.toString(label) + ")\n";
                 c += "@SP\n";
                 c += "M=M+1\n";
-                label++;
+                //label++;
                 //System.out.println(label);
                 break;    
         }
         return c;
     }
     
-    public String seg(String instruction, String []ins) {
+    public String seg(String instruction, String []ins, String name) {
         String r = "";
         String c = "";
         //System.out.println(ins[0]);
@@ -323,7 +334,7 @@ public class virtualmachine {
                 r += "@R" + Integer.toString(3 + Integer.parseInt(ins[2])) + "\n";
                 break;
             case "static":
-                r += "@" + Integer.toString(16 + Integer.parseInt(ins[2])) + "\n";
+                r += "@" + name + "." + ins[2] + "\n";
 
         }
         switch(instruction) {
