@@ -27,18 +27,18 @@ class VMTranslator {
         }
     }
 
-    public void write() {
+    public void write(String dir) {
         try {
-            File obj = new File("./FunctionCalls/StaticsTest/StaticsTest.asm");
+            File obj = new File("./ProgramFlow/FibonacciSeries/FibonacciSeries.asm");
             if(obj.createNewFile()) System.out.println("file created");
             else System.out.println("file already exists");
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("error");
             e.printStackTrace();
         }
 
         try {
-            FileWriter obj = new FileWriter("./FunctionCalls/StaticsTest/StaticsTest.asm");
+            FileWriter obj = new FileWriter("./ProgramFlow/FibonacciSeries/FibonacciSeries.asm");
             for(String s: hack) {
                 obj.write(s);
             }
@@ -52,26 +52,30 @@ class VMTranslator {
     public static void main(String args[]) {
         //System.out.println("akjsndkjasbndkj");
         VMTranslator vmt = new VMTranslator();
-        File dir = new File("./FunctionCalls/StaticsTest/");
+        File dir = new File(args[0]);
         File[] files = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.toLowerCase().endsWith(".vm");
             }
-        });
+        }); 
         //String temp = "./FunctionCalls/SimpleFunction" + "/" + "Sys" + ".vm";
 
 /*         for(int i=0; i<args.length; ++i) {
-            if(args[i].equals("Sys.vm")) sys=1;
+            if(args[i].equals("Sys.vm")) {
+                hack.add("@261\nD=A\n@SP\nM=D\n@LCL\nM=D\n");
+                hack.add("@Sys.init\n0;JMP\n");
+            }
         } */
         for(int k=0; k<files.length; ++k) {
             if(files[k].getName().equals("Sys" + ".vm")) {
                 hack.add("@261\nD=A\n@SP\nM=D\n@LCL\nM=D\n");
                 hack.add("@Sys.init\n0;JMP\n");
             }
-        }
+        } 
 
         for(int j=0; j<files.length; ++j) {
             try {
+                //File obj = new File(args[j]);
                 Scanner sc = new Scanner(files[j]);
                 while(sc.hasNextLine()) {
                     String data = sc.nextLine();
@@ -96,7 +100,7 @@ class VMTranslator {
             //hack.add("lol\n");
             System.out.println(files[j].getName());  
         }
-        vmt.write();
+        vmt.write(args[0]);
         //hack.add("(stop)\n@stop\n0;JMP\n");
         
     } 

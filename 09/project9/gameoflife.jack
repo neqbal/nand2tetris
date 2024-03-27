@@ -1,0 +1,38 @@
+class gameoflife {
+    field Cursor cursor;
+    field int population;
+    field int direction;
+
+    constructor gameoflife new() {
+        let cursor = Cursor.new(0,0, 0, 7);
+        return this;
+    }
+
+    method void moveCursor() {
+        if (direction = 1) { do cursor.moveUp(); }
+        if (direction = 2) { do cursor.moveDown(); }
+        //if (direction = 3) { do cursor.moveLeft(); }
+        //if (direction = 4) { do cursor.moveRight(); }
+        do Sys.wait(1500);  // delays the next movement
+        return;
+    }
+
+    method void run() {
+        var char key;
+        var boolean exit;
+        let exit = false;
+
+        while(~exit) {
+            let key = Keyboard.keyPressed();
+            //do Output.printInt(key);
+            if(key = 131) {do cursor.moveUp(); }
+            if(key = 133) {do cursor.moveDown(); }
+            if(key = 130) {do cursor.moveLeft(); }
+            if(key = 132) {do cursor.moveRight(); }
+            do Sys.wait(100);
+            let key = Keyboard.keyPressed();
+            //do Output.printInt(key);
+        }
+        return;
+    }
+}

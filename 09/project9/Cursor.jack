@@ -1,0 +1,72 @@
+class Cursor {
+
+    field int x, y, x1, y1;
+    field Memory memAddress;
+
+    constructor Cursor new(int ax, int ay, int ax1, int ay1) {
+        let x = ax;
+        let y = ay;
+        let x1 = ax1;
+        let y1 = ay1;
+        do draw();
+        return this;
+    }
+
+    method void moveUp() {
+        if(y > 0) {
+            do Screen.setColor(false);
+            do Screen.drawLine(x, y, x1, y1);
+            let y = y - 8;
+            let y1 = y1 - 8;
+            do Screen.setColor(true);
+            do Screen.drawLine(x, y, x1, y1);
+        }
+        return;
+    }
+
+    method void moveDown() {
+        if(y < 248) {
+            do Screen.setColor(false);
+            do Screen.drawLine(x, y, x1, y1);
+            let y = y + 8;
+            let y1 = y1 + 8;
+            //do Output.printInt(y);
+            do Screen.setColor(true);
+            do Screen.drawLine(x, y, x1, y1);
+        }
+        return;
+    }
+
+    method void moveLeft() {
+        if(x > 0) {
+            do Screen.setColor(false);
+            do Screen.drawLine(x, y, x1, y1);
+            let x = x - 7;
+            let x1 = x;
+            //do Output.printInt(y);
+            do Screen.setColor(true);
+            do Screen.drawLine(x, y, x1, y1);
+        }
+        return;
+    }
+
+    method void moveRight() {
+        if(x < 504) {
+            do Screen.setColor(false);
+            do Screen.drawLine(x, y, x1, y1);
+            let x = x + 7;
+            let x1 = x;
+            //do Output.printInt(y);
+            do Screen.setColor(true);
+            do Screen.drawLine(x, y, x1, y1);
+        }
+        return;
+    }
+    
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawLine(x, y, x1, y1);
+        return;
+    }
+}
