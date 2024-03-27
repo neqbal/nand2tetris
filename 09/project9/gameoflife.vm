@@ -4,7 +4,7 @@ call Memory.alloc 1
 pop pointer 0
 push constant 0
 push constant 0
-push constant 0
+push constant 7
 push constant 7
 call Cursor.new 4
 pop this 0
@@ -90,6 +90,16 @@ push this 0
 call Cursor.moveRight 1
 pop temp 0
 label IF_FALSE3
+push local 0
+push constant 32
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push this 0
+call Cursor.makebox 1
+pop temp 0
+label IF_FALSE4
 push constant 100
 call Sys.wait 1
 pop temp 0

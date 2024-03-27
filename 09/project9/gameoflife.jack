@@ -4,7 +4,7 @@ class gameoflife {
     field int direction;
 
     constructor gameoflife new() {
-        let cursor = Cursor.new(0,0, 0, 7);
+        let cursor = Cursor.new(0,0, 7, 7);
         return this;
     }
 
@@ -29,6 +29,7 @@ class gameoflife {
             if(key = 133) {do cursor.moveDown(); }
             if(key = 130) {do cursor.moveLeft(); }
             if(key = 132) {do cursor.moveRight(); }
+            if(key = 32)  {do cursor.makebox(); }
             do Sys.wait(100);
             let key = Keyboard.keyPressed();
             //do Output.printInt(key);
