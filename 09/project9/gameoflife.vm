@@ -1,5 +1,5 @@
 function gameoflife.new 0
-push constant 3
+push constant 4
 call Memory.alloc 1
 pop pointer 0
 push constant 0
@@ -100,6 +100,16 @@ push this 0
 call Cursor.makebox 1
 pop temp 0
 label IF_FALSE4
+push local 0
+push constant 80
+eq
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push constant 0
+not
+pop local 1
+label IF_FALSE5
 push constant 100
 call Sys.wait 1
 pop temp 0
@@ -107,5 +117,8 @@ call Keyboard.keyPressed 0
 pop local 0
 goto WHILE_EXP0
 label WHILE_END0
+push this 0
+call Cursor.delcursor 1
+pop temp 0
 push constant 0
 return

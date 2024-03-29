@@ -1,8 +1,13 @@
 class Cursor {
 
-    field int x, y, x1, y1;
+    field int x, y, x1, y1, count;
+    field Array a,b;
     field Memory memAddress;
+    field Game game;
     constructor Cursor new(int ax, int ay, int ax1, int ay1) {
+        let a = Array.new(256);
+        let b = Array.new(512);
+        let count = 0;
         let x = ax;
         let y = ay;
         let x1 = ax1;
@@ -60,7 +65,7 @@ class Cursor {
             let x1 = x1 + 8;
 
 
-
+            //do Output.printInt(x1);
             do Screen.setColor(true);
             do Screen.drawRectangle(x, y, x1, y1);
         }
@@ -69,16 +74,31 @@ class Cursor {
     
     method void makebox() {
         if (x < 505) {
-
             do Screen.setColor(true);
             do Screen.drawRectangle(x,y, x1, y1);
+            let a[count] = x;
+            let b[count] = y;
 
             let x = x + 8;
             let x1 = x1 + 8;
+            if(x1 = 519) {
+                let x1 = x1 - 8-8;
+                let x = x - 8-8;
+            }
             do Screen.setColor(true);
             do Screen.drawRectangle(x, y, x1, y1);
 
+            let count = count + 1;
         }
+        return;
+    }
+
+    method void delcursor() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x,y,x1,y1);
+
+        let game = Game.begin(a, b, count);
+
         return;
     }
 

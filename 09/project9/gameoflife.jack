@@ -2,6 +2,7 @@ class gameoflife {
     field Cursor cursor;
     field int population;
     field int direction;
+    field Game game;
 
     constructor gameoflife new() {
         let cursor = Cursor.new(0,0, 7, 7);
@@ -29,11 +30,15 @@ class gameoflife {
             if(key = 133) {do cursor.moveDown(); }
             if(key = 130) {do cursor.moveLeft(); }
             if(key = 132) {do cursor.moveRight(); }
-            if(key = 32)  {do cursor.makebox(); }
+            if(key = 32)  {do cursor.makebox();}
+            if(key = 80) {let exit = true;}
             do Sys.wait(100);
             let key = Keyboard.keyPressed();
             //do Output.printInt(key);
         }
+        //do Output.printChar(key);
+        do cursor.delcursor();
+        
         return;
     }
 }

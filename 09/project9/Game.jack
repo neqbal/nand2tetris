@@ -1,0 +1,53 @@
+class Game {
+    field Array x,y;
+    field Array pixels;
+    field int n;
+    constructor Game begin(Array a, Array b, int count) {
+        var int i, j;
+        let j = 0;
+        let i = 0;
+        let x = a;
+        let y = b;
+        let n = count;
+        let pixels = Array.new(2048);
+        while(i<count) {
+            let j = (b[i] * 8) + (x[i]/8);
+            let pixels[j] = 1;
+            let i = i + 1;
+        }
+        do getNeighbour();
+        return this;
+    }
+    method void getNeighbour() {
+        var int i, neighbour, xc, yc, pix, reg, rem, un, dn, j;
+        var boolean exit, flag;
+        let exit = false;
+        while(~exit) {
+            let neighbour = 0;
+            let i = 0;
+            while(i < n) {
+                let xc = x[i];
+                let yc = y[i];
+                let reg = 16384 + (yc*32) + (xc/16); 
+                let rem = xc;
+                let flag = false;
+                while(~flag) {
+                    let rem = rem - 16;
+                    if(rem = 8) {let flag = true;}
+                    if(rem = 0) {let flag = true;}
+                }
+
+                do Output.printInt(xc);
+                do Output.println();
+                do Output.printInt(yc);
+                do Output.println();
+                do Output.printInt(reg);
+                do Output.println();
+                do Output.printInt(rem);
+                let i = i + 1;
+            }
+            let exit = true;
+        }
+        return;
+    }
+}

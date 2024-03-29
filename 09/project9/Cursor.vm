@@ -1,7 +1,15 @@
 function Cursor.new 0
-push constant 5
+push constant 9
 call Memory.alloc 1
 pop pointer 0
+push constant 256
+call Array.new 1
+pop this 5
+push constant 512
+call Array.new 1
+pop this 6
+push constant 0
+pop this 4
 push argument 0
 pop this 0
 push argument 1
@@ -216,6 +224,22 @@ push this 2
 push this 3
 call Screen.drawRectangle 4
 pop temp 0
+push this 4
+push this 5
+add
+push this 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 4
+push this 6
+add
+push this 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
 push this 0
 push constant 8
 add
@@ -224,6 +248,25 @@ push this 2
 push constant 8
 add
 pop this 2
+push this 2
+push constant 519
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 2
+push constant 8
+sub
+push constant 8
+sub
+pop this 2
+push this 0
+push constant 8
+sub
+push constant 8
+sub
+pop this 0
+label IF_FALSE1
 push constant 0
 not
 call Screen.setColor 1
@@ -234,7 +277,30 @@ push this 2
 push this 3
 call Screen.drawRectangle 4
 pop temp 0
+push this 4
+push constant 1
+add
+pop this 4
 label IF_FALSE0
+push constant 0
+return
+function Cursor.delcursor 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 2
+push this 3
+call Screen.drawRectangle 4
+pop temp 0
+push this 5
+push this 6
+push this 4
+call Game.begin 3
+pop this 8
 push constant 0
 return
 function Cursor.draw 0
