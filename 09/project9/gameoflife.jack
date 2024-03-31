@@ -5,7 +5,7 @@ class gameoflife {
     field Game game;
 
     constructor gameoflife new() {
-        let cursor = Cursor.new(0,0, 7, 7);
+        let cursor = Cursor.new(0,0, 7, 7); 
         return this;
     }
 
@@ -16,16 +16,13 @@ class gameoflife {
 
         while(~exit) {
             let key = Keyboard.keyPressed();
-            //do Output.printInt(key);
-            if(key = 131) {do cursor.moveUp(); }
-            if(key = 133) {do cursor.moveDown(); }
-            if(key = 130) {do cursor.moveLeft(); }
-            if(key = 132) {do cursor.moveRight(); }
-            if(key = 32)  {do cursor.makebox();}
-            if(key = 80) {let exit = true;}
-            do Sys.wait(125);
-            let key = Keyboard.keyPressed();
-
+            if(key = 131) {do cursor.moveUp(); } //up
+            if(key = 133) {do cursor.moveDown(); } //down
+            if(key = 130) {do cursor.moveLeft(); } //left
+            if(key = 132) {do cursor.moveRight(); }  //right
+            if(key = 32)  {do cursor.makebox();}  //spacebar
+            if(key = 80) {let exit = true;} //exit the cursor mode by pressing p
+            do Sys.wait(125); 
         }
         do cursor.delcursor();
         

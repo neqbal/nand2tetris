@@ -5,17 +5,18 @@ class Cursor {
     field Memory memAddress;
     field Game game;
     constructor Cursor new(int ax, int ay, int ax1, int ay1) {
-        let a = Array.new(256);
-        let b = Array.new(512);
+        let a = Array.new(256); //y axis pixels
+        let b = Array.new(512); // x axis pixels
         let count = 0;
-        let x = ax;
-        let y = ay;
-        let x1 = ax1;
+        let x = ax; // x initial positon of cursor
+        let y = ay; // y initial position of cursor
+        let x1 = ax1; 
         let y1 = ay1;
-        do draw();
+        do draw(); //draws cursor
         return this;
     }
-    method void check() {
+    // checks if a box is a live cell when cursor is on top of it
+    method void check() { 
         var int i, flag;
         let i=0;
         let flag = 0;
@@ -28,7 +29,7 @@ class Cursor {
             }
             let i = i+ 1;
         }
-
+        //if box is not live cell then move cursor by deleting
         if(flag = 0) {
             do Screen.setColor(false);
             do Screen.drawRectangle(x, y, x1, y1);
@@ -38,7 +39,7 @@ class Cursor {
     }
     method void moveUp() {
         if(y > 0) {
-            do check();
+            do check(); 
             if(y=7) {let y = y - 7;}
             else {let y = y - 8;}
             let y1 = y1 - 8;
@@ -86,16 +87,17 @@ class Cursor {
         if (x < 505) {
             do Screen.setColor(true);
             do Screen.drawRectangle(x,y, x1, y1);
-            let a[count] = x;
-            let b[count] = y;
+            let a[count] = x; //x of top left corner of cell
+            let b[count] = y; //y of top left corner of cell
 
             let x = x + 8;
             let x1 = x1 + 8;
+            //right edge condition as cursor moves right after creating a cell
             if(x1 = 519) {
                 let x1 = x1 - 8-8;
                 let x = x - 8-8;
             }
-            do Screen.setColor(true);
+            do Screen.setColor(true); // move cursor;
             do Screen.drawRectangle(x, y, x1, y1);
 
             let count = count + 1;
@@ -106,7 +108,7 @@ class Cursor {
     method void delcursor() {
         do Screen.setColor(false);
         do Screen.drawRectangle(x,y,x1,y1);
-
+        //start multiplying after cursor is deleted
         let game = Game.begin(a, b, count);
 
         return;

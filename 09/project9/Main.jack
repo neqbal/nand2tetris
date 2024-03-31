@@ -3,7 +3,6 @@ class Main {
         var gameoflife game;
         let game = gameoflife.new();
         do game.run();
-        //do game.dispose();
         return;
     }
 }
