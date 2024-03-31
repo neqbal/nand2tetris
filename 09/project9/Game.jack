@@ -1,53 +1,251 @@
 class Game {
     field Array x,y;
     field Array pixels;
+    field Array state;
     field int n;
     constructor Game begin(Array a, Array b, int count) {
+
+        let n = count;
+        let x = Array.new(2048);
+        let y = Array.new(2048);
+        let state = Array.new(2048);
+        let pixels = Array.new(2048);
+        do genstart(a, b);
+
+        return this;
+    }
+    method void genstart(Array a, Array b) {
+        var char key;
+        var boolean exit;
+        var int i, j;
+        let key=Keyboard.keyPressed();
+        let key = 65;
+        let exit = false;
+        let x = a;
+        let y = b;
+        let i = 0;
+        let j = 0;
+        while(~exit) {
+            do initpix(x, y);
+            do getNeighbour();
+            do update();
+            do display();
+            //let i = i + 1;
+            do Sys.wait(500);
+        }
+        return;
+    }
+    method void update() {
+        var int i, j;
+        let i = 0;
+        let j = 0;
+        do x.dispose();  
+        do y.dispose();
+        do Output.printInt(69);
+        do Output.println();
+        while(i<2048) {
+            if(pixels[i] = 1) {
+                if(state[i] < 2) {
+                    let pixels[i] = 0;
+                    do Screen.setColor(false);
+                    do Screen.drawRectangle(((i - (64*(i/64))) * 8), (i/64)*8, ((i - (64*(i/64))) * 8) + 7, ((i/64)*8) + 7);
+                    let n = n - 1;
+                }
+                if(state[i]>1) {
+                    if(state[i] < 4) {
+                        let pixels[i] = 1;
+                        let x[j] = (i - (64*(i/64))) * 8;
+                        let y[j] = (i/64)*8;
+                        //do Output.printInt(x[j]);
+                        //do Output.println();
+                        //do Output.printInt(y[j]);
+                        //do Output.println();
+                        let j = j+1;
+                    }
+                }
+                
+                if(state[i] > 3) {
+                    let pixels[i] = 0;
+                    do Screen.setColor(false);
+                    do Screen.drawRectangle(((i - (64*(i/64))) * 8), (i/64)*8, ((i - (64*(i/64))) * 8) + 7, ((i/64)*8) + 7);
+                    let n = n - 1;
+                }
+                //do Output.printInt(state[i]);
+                //do Output.println();
+                //do Output.printInt(pixels[i]);
+                //do Output.println();
+            }
+
+            if(pixels[i] = 0) {
+                if(state[i] = 3) {
+                    let pixels[i] = 1;
+                    let x[j] = (i - (64*(i/64))) * 8;
+                    let y[j] = (i/64)*8;
+                    do Screen.setColor(true);
+                    do Screen.drawRectangle(((i - (64*(i/64))) * 8), (i/64)*8, ((i - (64*(i/64))) * 8) + 7, ((i/64)*8) + 7);
+                    //do Output.printInt(x[j]);
+                    //do Output.println();
+                    //do Output.printInt(y[j]);
+                    //do Output.println();
+                    let j = j + 1;
+                    //do Output.printInt(state[i]);
+                    //do Output.println();
+                    //do Output.printInt(pixels[i]);
+                    //do Output.println();
+                    let n = n + 1;
+                }
+
+            }
+            let i = i+1;
+        }
+        let j = 0;
+        while(j<2048) {
+            let state[j] = 0;
+            let j = j + 1;
+        }
+        return;
+    }
+    method void display() {
+        var int i, temp;
+        let i=0;
+        /*while(i<n) {
+            //do Output.printInt(x[i]);
+            //do Output.printInt(y[i]);
+            //do Output.println();
+            let temp = (y[i]*8) + (x[i]/8);
+            do Output.printInt(pixels[temp]);
+            do Output.println();
+            do Screen.setColor(false);
+            if(pixels[temp] = 1) {do Screen.setColor(true);}
+
+            //do Screen.setColor(true);
+            do Screen.drawRectangle(x[i], y[i], x[i] + 7, y[i] + 7);
+            let i = i + 1;
+        }*/
+        return;
+    }
+    method void initpix(Array a, Array b) {
         var int i, j;
         let j = 0;
         let i = 0;
-        let x = a;
-        let y = b;
-        let n = count;
-        let pixels = Array.new(2048);
-        while(i<count) {
-            let j = (b[i] * 8) + (x[i]/8);
+        
+        while(i<n) {
+            let j = (b[i] * 8) + (a[i]/8);
             let pixels[j] = 1;
+            //let x[i] = a[i];
+            //let y[i] = b[i];
             let i = i + 1;
         }
-        do getNeighbour();
-        return this;
+        return ;
     }
     method void getNeighbour() {
-        var int i, neighbour, xc, yc, pix, reg, rem, un, dn, j;
+        var int i, neighbour, xc, yc, pix, reg, rem, un, dn, j, temp, ln, rn;
         var boolean exit, flag;
         let exit = false;
-        while(~exit) {
-            let neighbour = 0;
-            let i = 0;
-            while(i < n) {
-                let xc = x[i];
-                let yc = y[i];
-                let reg = 16384 + (yc*32) + (xc/16); 
-                let rem = xc;
-                let flag = false;
-                while(~flag) {
-                    let rem = rem - 16;
-                    if(rem = 8) {let flag = true;}
-                    if(rem = 0) {let flag = true;}
-                }
-
-                do Output.printInt(xc);
-                do Output.println();
-                do Output.printInt(yc);
-                do Output.println();
-                do Output.printInt(reg);
-                do Output.println();
-                do Output.printInt(rem);
-                let i = i + 1;
+        let neighbour = 0;
+        let i = 0;
+        while(i < n) {
+            let xc = x[i];
+            let yc = y[i];
+            let reg = 16384 + (yc*32) + (xc/16); 
+            let rem = xc;
+            let flag = false;
+            while(~flag) {
+                let rem = rem - 16;
+                if(rem = 8) {let flag = true;}
+                if(rem = 0) {let flag = true;}
             }
-            let exit = true;
+
+
+            let pix = (yc*8) + (xc/8);
+            //let pix = i;
+            let temp = pix;
+            while(~flag) {
+                let temp = temp - 64;
+                if(temp = 0) {
+                    let flag = true;
+                    let ln = 1;
+                }
+                if(temp = - 1) {
+                    let flag = true;
+                    let rn = 1;
+                }
+            }
+            let flag = false;
+
+            if((pix-64) > -1) {
+                if(pixels[pix-64] = 1) { 
+                    let neighbour = neighbour+1;
+                } else {
+                    let state[pix-64] = state[pix - 64] + 1;
+
+                }
+                if((ln = 0)) {
+                    if(pixels[pix - 64 - 1] = 1) {
+                        let neighbour = neighbour + 1;
+                    } else {
+                        let state[pix-64 - 1] = state[pix - 64 - 1] + 1;
+                    }
+                }
+                if(rn = 0){
+                    if(pixels[pix - 64 + 1] = 1) {
+                        let neighbour = neighbour + 1;
+                    } else {
+                        let state[pix-64+1] = state[pix - 64+1] + 1;
+                    }
+                }
+            }
+
+            if(ln = 0) {
+                if(pixels[pix - 1] = 1) {
+                    let neighbour = neighbour + 1;
+                } else {
+                    let state[pix-1] = state[pix - 1] + 1;
+                }
+            }
+            if(rn = 0) {
+                if(pixels[pix + 1] = 1) {
+                    let neighbour = neighbour + 1;
+                } else {
+                    let state[pix +1] = state[pix + 1] + 1;
+                }
+            }
+
+            if((pix + 64) < 2048) {
+                if(pixels[pix+64] = 1) {
+                    let neighbour = neighbour+1;
+                } else {
+                    let state[pix+64] = state[pix + 64] + 1;
+                }
+                if((ln = 0)) {
+                    if(pixels[pix + 64 - 1] = 1) {
+                        let neighbour = neighbour + 1;
+                    } else {
+                        let state[pix+64-1] = state[pix + 64 - 1] + 1;
+                    }
+                }
+                if(rn = 0){
+                    if(pixels[pix + 64 + 1] = 1) {
+                        let neighbour = neighbour + 1;
+                    } else {
+                        let state[pix+64+1] = state[pix + 64+1] + 1;
+                    }
+                }  
+            }
+
+            let state[pix] = neighbour;
+            //do Output.println();
+            //do Output.printInt(pix);
+            //do Output.println();
+            /*if(neighbour > 0) {
+                do Output.printInt(neighbour);
+            }*/
+            
+            //do Output.println();
+            let neighbour = 0;
+            let i=i+1;
         }
+        //do Output.printInt(1);
         return;
     }
 }
