@@ -1,0 +1,122 @@
+class Cursor {
+
+    field int x, y, x1, y1, count;
+    field Array a,b;
+    field Memory memAddress;
+    field Game game;
+    constructor Cursor new(int ax, int ay, int ax1, int ay1) {
+        let a = Array.new(256); //y axis pixels
+        let b = Array.new(512); // x axis pixels
+        let count = 0;
+        let x = ax; // x initial positon of cursor
+        let y = ay; // y initial position of cursor
+        let x1 = ax1; 
+        let y1 = ay1;
+        do draw(); //draws cursor
+        return this;
+    }
+    // checks if a box is a live cell when cursor is on top of it
+    method void check() { 
+        var int i, flag;
+        let i=0;
+        let flag = 0;
+        while(i<count) {
+            if(a[i] = x) {
+                if(b[i] = y) {
+                    let flag = 1;
+                    let i=count;
+                }
+            }
+            let i = i+ 1;
+        }
+        //if box is not live cell then move cursor by deleting
+        if(flag = 0) {
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x, y, x1, y1);
+        }
+        let flag = 0;
+        return;
+    }
+    method void moveUp() {
+        if(y > 0) {
+            do check(); 
+            if(y=7) {let y = y - 7;}
+            else {let y = y - 8;}
+            let y1 = y1 - 8;
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x, y, x1, y1);
+        }
+        return;
+    }
+
+    method void moveDown() {
+        if(y < 247) {
+            do check();
+            let y = y + 8;
+            let y1 = y1 + 8;
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x, y, x1, y1);
+        }
+        return;
+    }
+
+    method void moveLeft() {
+        if(x > 0) {
+            do check();
+            if(x = 7) {let x = x - 7;}
+            else {let x = x - 8;}
+            let x1 = x1 - 8;
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x, y, x1, y1);
+        }
+        return;
+    }
+
+    method void moveRight() {
+        if(x < 503) {
+            do check();
+            let x = x + 8;
+            let x1 = x1 + 8;
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x, y, x1, y1);
+        }
+        return;
+    }
+    
+    method void makebox() {
+        if (x < 505) {
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x,y, x1, y1);
+            let a[count] = x; //x of top left corner of cell
+            let b[count] = y; //y of top left corner of cell
+
+            let x = x + 8;
+            let x1 = x1 + 8;
+            //right edge condition as cursor moves right after creating a cell
+            if(x1 = 519) {
+                let x1 = x1 - 8-8;
+                let x = x - 8-8;
+            }
+            do Screen.setColor(true); // move cursor;
+            do Screen.drawRectangle(x, y, x1, y1);
+
+            let count = count + 1;
+        }
+        return;
+    }
+
+    method void delcursor() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x,y,x1,y1);
+        //start multiplying after cursor is deleted
+        let game = Game.begin(a, b, count);
+
+        return;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x1, y1);
+        return;
+    }
+}
