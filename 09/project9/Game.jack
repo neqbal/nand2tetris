@@ -18,20 +18,15 @@ class Game {
         var char key;
         var boolean exit;
         var int i, j;
-        let key=Keyboard.keyPressed();
-        let key = 65;
         let exit = false;
         let x = a;
         let y = b;
         let i = 0;
-        let j = 0;
         while(~exit) {
             do initpix(x, y);
             do getNeighbour();
             do update();
-            do display();
-            //let i = i + 1;
-            do Sys.wait(500);
+            do Sys.wait(1000);
         }
         return;
     }
@@ -41,8 +36,6 @@ class Game {
         let j = 0;
         do x.dispose();  
         do y.dispose();
-        do Output.printInt(69);
-        do Output.println();
         while(i<2048) {
             if(pixels[i] = 1) {
                 if(state[i] < 2) {
@@ -56,10 +49,6 @@ class Game {
                         let pixels[i] = 1;
                         let x[j] = (i - (64*(i/64))) * 8;
                         let y[j] = (i/64)*8;
-                        //do Output.printInt(x[j]);
-                        //do Output.println();
-                        //do Output.printInt(y[j]);
-                        //do Output.println();
                         let j = j+1;
                     }
                 }
@@ -70,10 +59,6 @@ class Game {
                     do Screen.drawRectangle(((i - (64*(i/64))) * 8), (i/64)*8, ((i - (64*(i/64))) * 8) + 7, ((i/64)*8) + 7);
                     let n = n - 1;
                 }
-                //do Output.printInt(state[i]);
-                //do Output.println();
-                //do Output.printInt(pixels[i]);
-                //do Output.println();
             }
 
             if(pixels[i] = 0) {
@@ -83,15 +68,7 @@ class Game {
                     let y[j] = (i/64)*8;
                     do Screen.setColor(true);
                     do Screen.drawRectangle(((i - (64*(i/64))) * 8), (i/64)*8, ((i - (64*(i/64))) * 8) + 7, ((i/64)*8) + 7);
-                    //do Output.printInt(x[j]);
-                    //do Output.println();
-                    //do Output.printInt(y[j]);
-                    //do Output.println();
                     let j = j + 1;
-                    //do Output.printInt(state[i]);
-                    //do Output.println();
-                    //do Output.printInt(pixels[i]);
-                    //do Output.println();
                     let n = n + 1;
                 }
 
@@ -105,25 +82,6 @@ class Game {
         }
         return;
     }
-    method void display() {
-        var int i, temp;
-        let i=0;
-        /*while(i<n) {
-            //do Output.printInt(x[i]);
-            //do Output.printInt(y[i]);
-            //do Output.println();
-            let temp = (y[i]*8) + (x[i]/8);
-            do Output.printInt(pixels[temp]);
-            do Output.println();
-            do Screen.setColor(false);
-            if(pixels[temp] = 1) {do Screen.setColor(true);}
-
-            //do Screen.setColor(true);
-            do Screen.drawRectangle(x[i], y[i], x[i] + 7, y[i] + 7);
-            let i = i + 1;
-        }*/
-        return;
-    }
     method void initpix(Array a, Array b) {
         var int i, j;
         let j = 0;
@@ -132,8 +90,6 @@ class Game {
         while(i<n) {
             let j = (b[i] * 8) + (a[i]/8);
             let pixels[j] = 1;
-            //let x[i] = a[i];
-            //let y[i] = b[i];
             let i = i + 1;
         }
         return ;
@@ -147,18 +103,8 @@ class Game {
         while(i < n) {
             let xc = x[i];
             let yc = y[i];
-            let reg = 16384 + (yc*32) + (xc/16); 
-            let rem = xc;
             let flag = false;
-            while(~flag) {
-                let rem = rem - 16;
-                if(rem = 8) {let flag = true;}
-                if(rem = 0) {let flag = true;}
-            }
-
-
             let pix = (yc*8) + (xc/8);
-            //let pix = i;
             let temp = pix;
             while(~flag) {
                 let temp = temp - 64;
@@ -170,8 +116,10 @@ class Game {
                     let flag = true;
                     let rn = 1;
                 }
+                if(temp < -1) {
+                    let flag = true;
+                }
             }
-            let flag = false;
 
             if((pix-64) > -1) {
                 if(pixels[pix-64] = 1) { 
@@ -234,18 +182,11 @@ class Game {
             }
 
             let state[pix] = neighbour;
-            //do Output.println();
-            //do Output.printInt(pix);
-            //do Output.println();
-            /*if(neighbour > 0) {
-                do Output.printInt(neighbour);
-            }*/
-            
-            //do Output.println();
+            let ln = 0;
+            let rn = 0;
             let neighbour = 0;
             let i=i+1;
         }
-        //do Output.printInt(1);
         return;
     }
 }

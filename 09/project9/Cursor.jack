@@ -15,11 +15,30 @@ class Cursor {
         do draw();
         return this;
     }
+    method void check() {
+        var int i, flag;
+        let i=0;
+        let flag = 0;
+        while(i<count) {
+            if(a[i] = x) {
+                if(b[i] = y) {
+                    let flag = 1;
+                    let i=count;
+                }
+            }
+            let i = i+ 1;
+        }
 
-    method void moveUp() {
-        if(y > 0) {
+        if(flag = 0) {
             do Screen.setColor(false);
             do Screen.drawRectangle(x, y, x1, y1);
+        }
+        let flag = 0;
+        return;
+    }
+    method void moveUp() {
+        if(y > 0) {
+            do check();
             if(y=7) {let y = y - 7;}
             else {let y = y - 8;}
             let y1 = y1 - 8;
@@ -31,8 +50,7 @@ class Cursor {
 
     method void moveDown() {
         if(y < 247) {
-            do Screen.setColor(false);
-            do Screen.drawRectangle(x, y, x1, y1);
+            do check();
             let y = y + 8;
             let y1 = y1 + 8;
             do Screen.setColor(true);
@@ -43,14 +61,10 @@ class Cursor {
 
     method void moveLeft() {
         if(x > 0) {
-            do Screen.setColor(false);
-            do Screen.drawRectangle(x, y, x1, y1);
-
+            do check();
             if(x = 7) {let x = x - 7;}
             else {let x = x - 8;}
-    
             let x1 = x1 - 8;
-
             do Screen.setColor(true);
             do Screen.drawRectangle(x, y, x1, y1);
         }
@@ -59,13 +73,9 @@ class Cursor {
 
     method void moveRight() {
         if(x < 503) {
-            do Screen.setColor(false);
-            do Screen.drawRectangle(x, y, x1, y1);
+            do check();
             let x = x + 8;
             let x1 = x1 + 8;
-
-
-            //do Output.printInt(x1);
             do Screen.setColor(true);
             do Screen.drawRectangle(x, y, x1, y1);
         }

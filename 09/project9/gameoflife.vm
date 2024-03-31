@@ -10,34 +10,6 @@ call Cursor.new 4
 pop this 0
 push pointer 0
 return
-function gameoflife.moveCursor 0
-push argument 0
-pop pointer 0
-push this 2
-push constant 1
-eq
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-push this 0
-call Cursor.moveUp 1
-pop temp 0
-label IF_FALSE0
-push this 2
-push constant 2
-eq
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
-push this 0
-call Cursor.moveDown 1
-pop temp 0
-label IF_FALSE1
-push constant 1500
-call Sys.wait 1
-pop temp 0
-push constant 0
-return
 function gameoflife.run 2
 push argument 0
 pop pointer 0
@@ -110,7 +82,7 @@ push constant 0
 not
 pop local 1
 label IF_FALSE5
-push constant 100
+push constant 125
 call Sys.wait 1
 pop temp 0
 call Keyboard.keyPressed 0
