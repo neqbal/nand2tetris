@@ -21,21 +21,19 @@ class JackAnalyser {
                 try {
                     Scanner sc = new Scanner(file[i]);  
                     JackTokeneizer jt = new JackTokeneizer(sc, file[i].getPath(), file[i].getName());
-                    //code = jt.abc();
+                    sc.close();
                 } catch(FileNotFoundException e) {
                     System.out.println("file not found");
                 }
-
-                /*try {
-                    File f = new File(file[i].getName().replace(".jack", ".xml"));
-                    if(f.createNewFile()) System.out.println("file created");
-                    else System.out.println("file already exists");
-                    
-                } catch (IOException e) {
-                    System.out.println("ullulululu");
-                }*/
             }
-        } 
+        } else {
+            try {
+                File f = new File(args[0]);
+                Scanner sc = new Scanner(f);
+            } catch(FileNotFoundException e) {
+
+            }
+        }
         //System.out.println(file[0]);
     }
 }
