@@ -107,11 +107,11 @@ public class JackTokeneizer {
                 String n = "";
                 if(type.equals("keyword")) n += "<keyword> " + s + " </keyword>\n";
                 else if(type.equals("symbol")) {
-                    if (s.equals("<")) s = "&lt";
-                    else if(s.equals(">")) s = "&gt"; 
+                    if (s.equals("<")) s = "&lt;";
+                    else if(s.equals(">")) s = "&gt;"; 
                     n += "<symbol> " + s + " </symbol>\n";
                 }
-                else if(type.equals("integerConstant"))  n += "<integerConstant> " + s + " </inetegerConstant>\n";
+                else if(type.equals("integerConstant"))  n += "<integerConstant> " + s + " </integerConstant>\n";
                 else if(type.equals("stringConstant")) n += "<stringConstant> " + s.subSequence(1, s.length() - 1) + " </stringConstant>\n";
                 else n += "<identifier> " + s + " </identifier>\n"; 
                 w.write(n);
