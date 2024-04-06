@@ -12,9 +12,8 @@ import org.xml.sax.SAXException;
 class JackAnalyser {
     static List<String> code;
     public static void main(String args[]) throws ParserConfigurationException, SAXException, IOException {
-        String s = "aaa";
-        if(!s.endsWith(".jack")) {
-            File dir = new File(s);
+        if(!args[0].endsWith(".jack")) {
+            File dir = new File(args[0]);
             File[] file = dir.listFiles(new FilenameFilter() { 
                 public boolean accept(File dir, String name) {
                     return name.endsWith(".jack");
@@ -33,7 +32,7 @@ class JackAnalyser {
             }
         } else {
             try {
-                File f = new File(s);
+                File f = new File(args[0]);
                 Scanner sc = new Scanner(f);
                 JackTokeneizer jt =  new JackTokeneizer(sc, f.getPath(), f.getName());
                 //CompilationEngine ce = new CompilationEngine(f.getPath(), f.getName());

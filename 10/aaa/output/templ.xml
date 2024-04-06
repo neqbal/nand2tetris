@@ -14,7 +14,8 @@
         <keyword> void </keyword>
         <identifier> main </identifier>
         <symbol> ( </symbol>
-        <parameterList/>
+        <parameterList>
+</parameterList>
         <symbol> ) </symbol>
         <subroutineBody>
             <symbol> { </symbol>
@@ -63,7 +64,8 @@
         <keyword> void </keyword>
         <identifier> more </identifier>
         <symbol> ( </symbol>
-        <parameterList/>
+        <parameterList>
+</parameterList>
         <symbol> ) </symbol>
         <subroutineBody>
             <symbol> { </symbol>
