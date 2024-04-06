@@ -45,9 +45,9 @@ public class CompilationEngine {
             System.out.println(doc1.getDocumentElement().getNodeName());
 
             nList = doc1.getDocumentElement().getChildNodes();
-/*             for(int i=0; i<nList.getLength(); ++i) {
-                System.out.println(nList.item(i).getNodeName() + " " + i);
-            }  */
+            for(int i=0; i<nList.getLength(); ++i) {
+                System.out.println(nList.item(i).getNodeName() + " " + i + nList.item(i).getTextContent());
+            } 
 
             //System.out.println(nList.item(0).getNodeName());
             CompileClass(doc2);
@@ -98,15 +98,15 @@ public class CompilationEngine {
         Element rootElement = doc.createElement("class");
         doc.appendChild(rootElement);
         Node n;
+        rootElement.appendChild(doc.importNode(getNextToken("next"), true));
+        rootElement.appendChild(doc.importNode(getNextToken("next"), true));
+        rootElement.appendChild(doc.importNode(getNextToken("next"), true));
         do {
             if(getNextToken("check") == null) {
                 return;
             }
-
-            n = getNextToken("next");
             //if ((getNextToken("check").getTextContent().equals(" static "))) System.out.println("hululul");
             if(getNextToken("check").getTextContent().equals(" static ") || getNextToken("check").getTextContent().equals(" field ")) {
-                rootElement.appendChild(doc.importNode(n, true));
                 CompileClassVarDec(rootElement, doc);
             }
 
@@ -114,15 +114,9 @@ public class CompilationEngine {
                 System.out.println("function");
                 CompileSubroutine(rootElement, doc);
             } 
-            else {
-                rootElement.appendChild(doc.importNode(n, true));
-            }
-
-            
-            System.out.println(69);
-        } while(i<nList.getLength());
-
-        doc.appendChild(rootElement);
+            System.out.println(getNextToken("check").getTextContent());
+        } while(i<(nList.getLength()-4));
+        rootElement.appendChild(doc.importNode(getNextToken("next"), true));
     }
 
     public void CompileClassVarDec(Element rootElement, Document doc) {
@@ -170,6 +164,7 @@ public class CompilationEngine {
             }
             //System.out.println(getNextToken("check").getTextContent());
             CompileStatement(subroutineB, doc);
+            //System.out.print(1);
         } while(!getNextToken("check").getTextContent().equals(" } "));
         subroutineB.appendChild(doc.importNode(getNextToken("next"), true));
 
@@ -221,9 +216,14 @@ public class CompilationEngine {
                 CompileReturn(statements, doc);
             }
             else if(getNextToken("check").getTextContent().equals(" if ")) {
+                System.out.println("bub");
                 CompileIf(statements, doc);
+                System.out.println(getNextToken("check").getTextContent());
+                System.out.println("twtwt");
             }
+            //System.out.println(getNextToken("check").getTextContent());
         } while(!getNextToken("check").getTextContent().equals(" } "));
+        System.out.println("uwuwuuw");
     }
 
     public void CompileLet(Element statements, Document doc) {
@@ -299,14 +299,33 @@ public class CompilationEngine {
             }
         } while(!n.getTextContent().equals(" ) "));
         int flag = 0;
-        if(getNextToken("check").getTextContent().equals("{")) {
+        System.out.println("uwu");
+        System.out.println(getNextToken("check").getTextContent());
+        if(getNextToken("check").getTextContent().equals(" { ")) {
             ifStatement.appendChild(doc.importNode(getNextToken("next"), true));
+            System.out.println("ararara");
             flag = 1;
         }
         CompileStatement(ifStatement, doc);
-
+        System.out.println(1);
         if(flag == 1) {
-            ifStatement.appendChild(getNextToken("next"));
+            n = getNextToken("next");
+            ifStatement.appendChild(doc.importNode(n, true));
+            System.out.println(n.getTextContent());
+        }
+
+        n = getNextToken("next");
+        System.out.println(n.getTextContent());
+        if(n.getTextContent().equals(" else ")) {
+            System.out.println(n.getTextContent());
+            ifStatement.appendChild(doc.importNode(n, true));
+            if(getNextToken("check").getTextContent().equals(" { ")) {
+                ifStatement.appendChild(doc.importNode(getNextToken("next"), true));
+            }
+
+            CompileStatement(ifStatement, doc);
+            ifStatement.appendChild(doc.importNode(getNextToken("next"), true));
+            System.out.print(getNextToken("check"));
         }
     }
 
