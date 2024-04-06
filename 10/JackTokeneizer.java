@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
 
@@ -121,7 +120,6 @@ public class JackTokeneizer {
         } catch(IOException e) {
             System.out.println("whajndksm");
         }
-
     }
     public String tokentype(String s) {
         if(keyword.contains(s)) return "keyword";

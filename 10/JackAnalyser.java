@@ -1,17 +1,20 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 class JackAnalyser {
     static List<String> code;
-    public static void main(String args[]) {
-        if(!args[0].endsWith(".jack")) {
-            File dir = new File(args[0]);
+    public static void main(String args[]) throws ParserConfigurationException, SAXException, IOException {
+        String s = "aaa";
+        if(!s.endsWith(".jack")) {
+            File dir = new File(s);
             File[] file = dir.listFiles(new FilenameFilter() { 
                 public boolean accept(File dir, String name) {
                     return name.endsWith(".jack");
@@ -25,14 +28,20 @@ class JackAnalyser {
                 } catch(FileNotFoundException e) {
                     System.out.println("file not found");
                 }
+
+                CompilationEngine ce = new CompilationEngine(file[i].getPath(), file[i].getName());
             }
         } else {
             try {
-                File f = new File(args[0]);
+                File f = new File(s);
                 Scanner sc = new Scanner(f);
+                JackTokeneizer jt =  new JackTokeneizer(sc, f.getPath(), f.getName());
+                //CompilationEngine ce = new CompilationEngine(f.getPath(), f.getName());
+                sc.close();
             } catch(FileNotFoundException e) {
 
             }
+            
         }
         //System.out.println(file[0]);
     }
