@@ -237,15 +237,19 @@ public class CompilationEngine {
     }
 
     public void CompileDo(Element statements, Document doc) {
+        System.out.println("entered do");
         Element doStatement = doc.createElement("doStatement");
         statements.appendChild(doStatement);
         Node n;
         do {
             n = getNextToken("next");
             doStatement.appendChild(doc.importNode(n, true));
-            if(n.getTextContent().equals("(")) {
+            if(n.getTextContent().equals(" ( ")) {
+                CompileExpressionList(doStatement, doc);
             }
         } while(!n.getTextContent().equals(" ; "));
+
+        System.err.println("exit do");
     }
 
     public void CompileWhile(Element statements, Document doc) {
@@ -293,7 +297,7 @@ public class CompilationEngine {
             n = getNextToken("next");
             ifStatement.appendChild(doc.importNode(n, true));
             if(n.getTextContent().equals(" ( ")) {
-                //CompileExpression(ifStatement, doc);
+                CompileExpression(ifStatement, doc, n.getTextContent());
             }
         } while(!n.getTextContent().equals(" ) "));
         int flag = 0;
@@ -340,7 +344,10 @@ public class CompilationEngine {
             }
         } while(!getNextToken("check").getTextContent().equals(" ) ")
                 && !getNextToken("check").getTextContent().equals(" ] ")
-                && !getNextToken("check").getTextContent().equals(" ; "));
+                && !getNextToken("check").getTextContent().equals(" ; ")
+                && !getNextToken("check").getTextContent().equals(" , "));
+        System.out.println("exit compile expressiom");
+        System.out.println(getNextToken("check").getTextContent());
     }
 
     public void CompileTerm(Element expression, Document doc) {
@@ -356,12 +363,39 @@ public class CompilationEngine {
         do {
             n = getNextToken("next");
             term.appendChild(doc.importNode(n, true));
+            if(n.getTextContent().equals(" ( ")) {
+               CompileExpressionList(term, doc);
+            }
+            if(n.getTextContent().equals(" [ ")) {
+                CompileExpression(term, doc, null);
+            }
             System.out.println(n.getTextContent());
-            
+
         } while(!opterm.contains(getNextToken("check").getTextContent())
                 && !getNextToken("check").getTextContent().equals(" ; ")
                 && !getNextToken("check").getTextContent().equals(" ) ")
                 && !getNextToken("check").getTextContent().equals(" ] "));
         System.out.println("exit compile term");
     } 
+
+    public void CompileExpressionList (Element term, Document doc) {
+        System.out.println("entered expression list");
+        Element explist = doc.createElement("expressionList");
+        term.appendChild(explist);
+        //explist.setTextContent("absdjn");
+        if(getNextToken("check").getTextContent().equals(" ) ")) {
+            explist.setTextContent("\n");
+        } else {
+            do {
+                CompileExpression(explist, doc, null);
+                System.out.println("huauhuah");
+            } while(!getNextToken("check").getTextContent().equals(" ) ")); 
+
+            System.out.println(getNextToken("check").getTextContent());
+
+            term.appendChild(doc.importNode(getNextToken("next"), true));
+        }
+        System.out.println("exit expression list");
+        //System.out.println(explist.getLastChild());
+    }
 }
