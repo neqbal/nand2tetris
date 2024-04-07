@@ -64,14 +64,27 @@ public class JackTokeneizer {
                     int j = stringconstant(i, s);
                     tokenized.add(s.substring(i, j+1));
                     i = j;
+                } else if(Character.isDigit(s.charAt(i))){
+                    int j=integerconstant(i, s);
+                    tokenized.add(s.substring(i, j));
+                    System.out.println(s.substring(i, j+1));
+                    i=j-1;
                 } else {
                     if(s.charAt(i) != ' ') {
                         tokenized.add(""+s.charAt(i));
                     }
                 }
-            }
+            }       
         }
     }
+    public int integerconstant(int i, String s) {
+        int j=i;
+        while(Character.isDigit(s.charAt(j))) {
+            j++;
+        }
+        return j;
+    }
+
     public int stringconstant(int i, String s) {
         for(int j=i+1; j<s.length(); ++j) {
             if(s.charAt(j) == '"') {
@@ -108,6 +121,7 @@ public class JackTokeneizer {
                 else if(type.equals("symbol")) {
                     if (s.equals("<")) s = "&lt;";
                     else if(s.equals(">")) s = "&gt;"; 
+                    else if(s.equals("&")) s = "&amp;";
                     n += "<symbol> " + s + " </symbol>\n";
                 }
                 else if(type.equals("integerConstant"))  n += "<integerConstant> " + s + " </integerConstant>\n";
