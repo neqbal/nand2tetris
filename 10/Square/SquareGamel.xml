@@ -50,8 +50,7 @@
                                 <symbol> , </symbol>
                                 <expression>
                                     <term>
-                                        <integerConstant> 3 </integerConstant>
-                                        <integerConstant> 0 </integerConstant>
+                                        <integerConstant> 30 </integerConstant>
                                     </term>
                                 </expression>
                             </expressionList>
@@ -73,7 +72,11 @@
                 </letStatement>
                 <returnStatement>
                     <keyword> return </keyword>
-                    <keyword> this </keyword>
+                    <expression>
+                        <term>
+                            <keyword> this </keyword>
+                        </term>
+                    </expression>
                     <symbol> ; </symbol>
                 </returnStatement>
             </statements>
@@ -378,8 +381,7 @@
                                 </term>
                                 <symbol> = </symbol>
                                 <term>
-                                    <integerConstant> 8 </integerConstant>
-                                    <integerConstant> 1 </integerConstant>
+                                    <integerConstant> 81 </integerConstant>
                                 </term>
                             </expression>
                             <symbol> ) </symbol>
@@ -408,8 +410,7 @@
                                 </term>
                                 <symbol> = </symbol>
                                 <term>
-                                    <integerConstant> 9 </integerConstant>
-                                    <integerConstant> 0 </integerConstant>
+                                    <integerConstant> 90 </integerConstant>
                                 </term>
                             </expression>
                             <symbol> ) </symbol>
@@ -438,8 +439,7 @@
                                 </term>
                                 <symbol> = </symbol>
                                 <term>
-                                    <integerConstant> 8 </integerConstant>
-                                    <integerConstant> 8 </integerConstant>
+                                    <integerConstant> 88 </integerConstant>
                                 </term>
                             </expression>
                             <symbol> ) </symbol>
@@ -468,9 +468,7 @@
                                 </term>
                                 <symbol> = </symbol>
                                 <term>
-                                    <integerConstant> 1 </integerConstant>
-                                    <integerConstant> 3 </integerConstant>
-                                    <integerConstant> 1 </integerConstant>
+                                    <integerConstant> 131 </integerConstant>
                                 </term>
                             </expression>
                             <symbol> ) </symbol>
@@ -499,9 +497,7 @@
                                 </term>
                                 <symbol> = </symbol>
                                 <term>
-                                    <integerConstant> 1 </integerConstant>
-                                    <integerConstant> 3 </integerConstant>
-                                    <integerConstant> 3 </integerConstant>
+                                    <integerConstant> 133 </integerConstant>
                                 </term>
                             </expression>
                             <symbol> ) </symbol>
@@ -530,9 +526,7 @@
                                 </term>
                                 <symbol> = </symbol>
                                 <term>
-                                    <integerConstant> 1 </integerConstant>
-                                    <integerConstant> 3 </integerConstant>
-                                    <integerConstant> 0 </integerConstant>
+                                    <integerConstant> 130 </integerConstant>
                                 </term>
                             </expression>
                             <symbol> ) </symbol>
@@ -561,9 +555,7 @@
                                 </term>
                                 <symbol> = </symbol>
                                 <term>
-                                    <integerConstant> 1 </integerConstant>
-                                    <integerConstant> 3 </integerConstant>
-                                    <integerConstant> 2 </integerConstant>
+                                    <integerConstant> 132 </integerConstant>
                                 </term>
                             </expression>
                             <symbol> ) </symbol>
@@ -591,17 +583,15 @@
                                     <symbol> ~ </symbol>
                                     <term>
                                         <symbol> ( </symbol>
-                                        <expressionList>
-                                            <expression>
-                                                <term>
-                                                    <identifier> key </identifier>
-                                                </term>
-                                                <symbol> = </symbol>
-                                                <term>
-                                                    <integerConstant> 0 </integerConstant>
-                                                </term>
-                                            </expression>
-                                        </expressionList>
+                                        <expression>
+                                            <term>
+                                                <identifier> key </identifier>
+                                            </term>
+                                            <symbol> = </symbol>
+                                            <term>
+                                                <integerConstant> 0 </integerConstant>
+                                            </term>
+                                        </expression>
                                         <symbol> ) </symbol>
                                     </term>
                                 </term>

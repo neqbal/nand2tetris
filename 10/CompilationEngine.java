@@ -314,7 +314,7 @@ public class CompilationEngine {
             n = getNextToken("next");
             returnStatement.appendChild(doc.importNode(n, true));
             System.out.println(n.getTextContent());
-            if(list.contains(getNextToken("check").getNodeName())) {
+            if(list.contains(getNextToken("check").getNodeName()) || list.contains(getNextToken("check").getTextContent())) {
                 CompileExpression(returnStatement, doc, null);
             }
 
@@ -376,7 +376,8 @@ public class CompilationEngine {
                 CompileTerm(expression, doc, " ");
             } else if(n.getTextContent().equals(" ( ")){
                 CompileTerm(expression, doc, "term");
-            } else if(!expression.hasChildNodes() && n.getTextContent().equals(" - ") || n.getTextContent().equals(" ~ ")) {
+            } else if(!expression.hasChildNodes() && (n.getTextContent().equals(" - ") || n.getTextContent().equals(" ~ "))) {
+
                 CompileTerm(expression, doc, "op");
             } else {   
                 expression.appendChild(doc.importNode(getNextToken("next"), true));
@@ -400,11 +401,15 @@ public class CompilationEngine {
             if(n.getTextContent().equals(" ( ") && !s.equals("term")) {
                CompileExpressionList(term, doc);
             }
-            else if(n.getTextContent().equals(" [ ") || s.equals("term")) {
+            else if(n.getTextContent().equals(" [ ") || s.equals("term")  ) {
                 CompileExpression(term, doc, null);
                 term.appendChild(doc.importNode(getNextToken("next"), true));
             } else if(s.equals("op")) {
-                CompileTerm(term, doc, " ");
+                if(getNextToken("check").getTextContent().equals(" ( ")) {
+                    CompileTerm(term, doc, "term");    
+                } else {
+                    CompileTerm(term, doc, " ");
+                }
             }
            
         } while(!opterm.contains(getNextToken("check").getTextContent())

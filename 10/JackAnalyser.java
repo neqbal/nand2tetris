@@ -28,7 +28,7 @@ class JackAnalyser {
                     System.out.println("file not found");
                 }
 
-                //CompilationEngine ce = new CompilationEngine(file[i].getPath(), file[i].getName());
+                CompilationEngine ce = new CompilationEngine(file[i].getPath(), file[i].getName());
             }
         } else {
             try {
