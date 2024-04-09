@@ -102,9 +102,11 @@ public class JackTokeneizer {
         return i+1;
     }
     public void writetoken(String path, String name) {
-        System.out.println(path);
+        //System.out.println(path);
         try {
-            File f = new File(path.replace(name, "/output/") + name.replace(".jack", "lT.xml"));
+            //File f = new File(path.replace(name, "/output/") + name.replace(".jack", "lT.xml"));
+            //System.out.println(path.replace(name, name.replace(".jack", "T.xml")));
+            File f = new File(path.replace(name, name.replace(".jack", "T.xml")));
             if(f.createNewFile()) System.out.println("file created");
             else System.out.println("file already created");
         } catch(IOException e) {
@@ -112,7 +114,8 @@ public class JackTokeneizer {
         }
 
         try {
-            FileWriter w = new FileWriter(path.replace(name, "/output/") + name.replace(".jack", "lT.xml"));
+            //FileWriter w = new FileWriter(path.replace(name, "/output/") + name.replace(".jack", "lT.xml"));
+            FileWriter w = new FileWriter(path.replace(name, name.replace(".jack", "T.xml")));
             w.write("<tokens>\n");
             for(String s: tokenized) {
                 String type = tokentype(s);

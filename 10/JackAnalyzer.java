@@ -9,7 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-class JackAnalyser {
+class JackAnalyzer {
     static List<String> code;
     public static void main(String args[]) throws ParserConfigurationException, SAXException, IOException {
         if(!args[0].endsWith(".jack")) {
@@ -35,7 +35,7 @@ class JackAnalyser {
                 File f = new File(args[0]);
                 Scanner sc = new Scanner(f);
                 JackTokeneizer jt =  new JackTokeneizer(sc, f.getPath(), f.getName());
-                //CompilationEngine ce = new CompilationEngine(f.getPath(), f.getName());
+                CompilationEngine ce = new CompilationEngine(f.getPath(), f.getName());
                 sc.close();
             } catch(FileNotFoundException e) {
 

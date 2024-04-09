@@ -35,15 +35,16 @@ public class CompilationEngine {
         opterm.add(" / "); opterm.add(" & "); opterm.add(" | "); 
         opterm.add(" < "); opterm.add(" > "); opterm.add(" = ");
         try {
-            File f = new File(path.replace(name, "/output/") + name.replace(".jack", "l.xml"));
+            //File f = new File(path.replace(name, "/output/") + name.replace(".jack", "l.xml"));
+            File f = new File(path.replace(name, name.replace(".jack", ".xml")));
             if(f.createNewFile()) System.out.println("file created");
             else System.out.println("file already created");
         } catch(IOException e) {
             System.out.println("ashgbdfnj");
         }
         try {
-            File tokenisedf = new File(path.replace(name, "/output/") + name.replace(".jack", "lT.xml"));
-
+            //File tokenisedf = new File(path.replace(name, "/output/") + name.replace(".jack", "lT.xml"));
+            File tokenisedf = new File(path.replace(name, name.replace(".jack", "T.xml")));
             DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
             
             DocumentBuilder dBuilder = dbfactory.newDocumentBuilder();
@@ -70,7 +71,7 @@ public class CompilationEngine {
     }
 
     public void write(String path, String name, Document doc) throws TransformerException {
-        try (FileOutputStream output = new FileOutputStream(path.replace(name, "/output/") + name.replace(".jack", "l.xml"))) {
+        try (FileOutputStream output = new FileOutputStream(path.replace(name, name.replace(".jack", ".xml")))) {
             writeXml(doc, output);
         } catch(IOException e) {
             e.printStackTrace();
