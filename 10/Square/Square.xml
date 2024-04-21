@@ -73,7 +73,7 @@
                     <identifier> draw </identifier>
                     <symbol> ( </symbol>
                     <expressionList>
-</expressionList>
+                    </expressionList>
                     <symbol> ) </symbol>
                     <symbol> ; </symbol>
                 </doStatement>
