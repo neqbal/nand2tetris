@@ -24,10 +24,16 @@ import org.w3c.dom.Element;
 public class CompilationEngine {
     NodeList nList;
     static int i=-1;
+    static int countexpressionlist=0;
+    int constructor = 0;
+    int flag = 0;
+    int ifs;
+    int whiles;
     List<String> list = new ArrayList<>();
     List<String> opterm = new ArrayList<>();
 
     SymbolTable st = new SymbolTable();
+    VMWriter vw = new VMWriter(st);
 
     public CompilationEngine(String path, String name) throws ParserConfigurationException, SAXException, IOException { 
 
@@ -65,9 +71,12 @@ public class CompilationEngine {
             }  */
 
             //System.out.println(nList.item(0).getNodeName());
-
+            
+            vw.create(path, name);
             CompileClass(doc2);
-            write(path, name, doc2);
+            //write(path, name, doc2);
+            //vw.print();
+            vw.writevm(path, name);
             
         } catch(Exception e) {
             e.printStackTrace();
@@ -111,6 +120,7 @@ public class CompilationEngine {
     public void CompileClass(Document doc) {
         i=-1;
         //System.out.println("entered compile class");
+        st.ClearClassTable();
         Element rootElement = doc.createElement("class");
         doc.appendChild(rootElement);
         rootElement.appendChild(doc.importNode(getNextToken("next"), true));
@@ -129,7 +139,10 @@ public class CompilationEngine {
             }
 
             else if(getNextToken("check").getTextContent().equals(" function ") || getNextToken("check").getTextContent().equals(" constructor ") || getNextToken("check").getTextContent().equals(" method ") ) {
-              
+                ifs = -1;
+                whiles=0;
+                countexpressionlist = 0;
+                st.ClearSubroutineTable();
                 CompileSubroutine(rootElement, doc);
             } 
         } while(i<(nList.getLength()-4));
@@ -155,10 +168,24 @@ public class CompilationEngine {
         //System.out.println("entered compile subroutine");
         Element subroutine = doc.createElement("subroutineDec");
         rootElement.appendChild(subroutine);
+        
+        if(getNextToken("check").getTextContent().equals(" method ")) {
+            flag = 1;
+        } 
+        if(getNextToken("check").getTextContent().equals(" constructor ")) {
+            constructor = 1;
+        }
         Node n;
         do {
             n = getNextToken("next");
             subroutine.appendChild(doc.importNode(n, true));
+            if(n.getTextContent().equals(" void ")) vw.subroutinetype = "void";
+            if(n.getNodeName().equals("identifier")) {
+                if(flag == 1) {
+                    st.methodEntry(n.getTextContent().trim());
+                }
+                vw.subroutinename = n.getTextContent();
+            }
             if(n.getTextContent().equals(" ( " )) {
                 CompileParameterList(subroutine, doc);
             }
@@ -179,8 +206,17 @@ public class CompilationEngine {
         do {
             if(getNextToken("check").getTextContent().equals(" var ")) {
                 CompileVarDec(subroutineB, doc);
-             
             } else {
+                if(constructor == 1) {
+                    vw.writeconstruct();
+                    constructor = 0;
+                } else if(flag == 1) {
+                    vw.writefunc();
+                    vw.writemethod();
+                    flag = 0;
+                } else {
+                    vw.writefunc();
+                }
                 CompileStatement(subroutineB, doc);
             }
        
@@ -199,6 +235,8 @@ public class CompilationEngine {
             varDec.appendChild(doc.importNode(n, true));
            
         } while(!n.getTextContent().equals(" ; "));
+
+        st.SubroutineScope(varDec);
         //System.out.println("exit var dec");
     }
 
@@ -215,8 +253,9 @@ public class CompilationEngine {
                 parameterList.appendChild(doc.importNode(n, true));
             }while(!getNextToken("check").getTextContent().equals(" ) "));
         }
+
+        st.parameterTable(parameterList);
         //System.out.println("exit parameter list");
-        
     }
 
     public void CompileStatement(Element subroutineB, Document doc) {
@@ -236,13 +275,13 @@ public class CompilationEngine {
                     CompileDo(statements, doc);
                 }
                 else if( getNextToken("check").getTextContent().equals(" while ")) {
-                    CompileWhile(statements, doc);
+                    CompileWhile(statements, doc, whiles++);
                 }
                 else if(getNextToken("check").getTextContent().equals(" return ")) {
                     CompileReturn(statements, doc);
                 }
                 else if(getNextToken("check").getTextContent().equals(" if ")) {
-                    CompileIf(statements, doc);
+                    CompileIf(statements, doc, ifs++);
                     //System.out.println(getNextToken("check").getTextContent());
                 }
             } while(!getNextToken("check").getTextContent().equals(" } "));
@@ -255,15 +294,27 @@ public class CompilationEngine {
         Element letStatement = doc.createElement("letStatement");
         statements.appendChild(letStatement);
         Node n;
+        int flag = 0;
         do {
             n = getNextToken("next");
             letStatement.appendChild(doc.importNode(n, true));
-        
             if(n.getTextContent().equals(" = ") || n.getTextContent().equals(" [ ")) {
+                String a = n.getTextContent();
                 CompileExpression(letStatement, doc, n.getTextContent());
+
+                if(a.equals(" [ ")) {
+                    vw.writelet(letStatement);
+                    flag = 1;
+                }
             }
             
         } while(!n.getTextContent().equals(" ; "));
+        if(flag == 0) {
+            vw.writelet(letStatement);
+        } 
+        if(flag == 1) {
+            vw.writeendarray();
+        }
         //System.out.println("exit compile let");
 
     }
@@ -272,19 +323,39 @@ public class CompilationEngine {
         //System.out.println("enter compile do");
         Element doStatement = doc.createElement("doStatement");
         statements.appendChild(doStatement);
+        int check = 0;
+        int a = 0;
+        String temp="";
         Node n;
         do {
             n = getNextToken("next");
             doStatement.appendChild(doc.importNode(n, true));
+            if(n.getTextContent().equals(" . ")) {
+                check = 1;
+            }
+            if(getNextToken("check").getTextContent().equals(" . ")) {
+                temp += n.getTextContent();
+                if(!st.gettype(n.getTextContent().trim()).equals("")) {
+                    a = 1;
+                }
+            }
             if(n.getTextContent().equals(" ( ")) {
+                countexpressionlist = 0;
+                if(check == 0) {
+                    vw.writemethodcall();
+                }
+                if(a == 1) {
+                    vw.writeobjectmethodcall(temp); 
+                }
+                check = 0;
+                a=0;
                 CompileExpressionList(doStatement, doc);
             }
         } while(!n.getTextContent().equals(" ; "));
-
+        vw.writedo(doStatement);
         //System.out.println("exit do");
     }
-
-    public void CompileWhile(Element statements, Document doc) {
+    public void CompileWhile(Element statements, Document doc, int whilecount) {
         //System.out.println("enter compile while");
         Element whileStatement = doc.createElement("whileStatement");
         statements.appendChild(whileStatement);
@@ -292,10 +363,14 @@ public class CompilationEngine {
         do {
             n = getNextToken("next");
             whileStatement.appendChild(doc.importNode(n, true));
-            
+
             if(n.getTextContent().equals(" ( ")) {
+                vw.writelabel("WHILE_EXP" + whilecount);
                 CompileExpression(whileStatement, doc, n.getTextContent());
+                vw.writeuniop("~");
+                vw.writeif("WHILE_END" + whilecount);
             }
+
         } while(!n.getTextContent().equals(" ) "));
         int flag = 0;
         if(getNextToken("check").getTextContent().equals(" { ")) {
@@ -303,11 +378,13 @@ public class CompilationEngine {
             flag = 1;
         }
         CompileStatement(whileStatement, doc);
+        vw.writegoto("WHILE_EXP" + whilecount);
+        vw.writelabel("WHILE_END" + whilecount);
 
         if(flag == 1) {
             whileStatement.appendChild(doc.importNode(getNextToken("next"), true));
         }
-
+        
         //System.out.println("exit compile while");
     }
 
@@ -323,21 +400,31 @@ public class CompilationEngine {
             if(list.contains(getNextToken("check").getNodeName()) || list.contains(getNextToken("check").getTextContent())) {
                 CompileExpression(returnStatement, doc, null);
             }
+            if(opterm.contains(n.getTextContent())) {
+                vw.writeuniop(n.getTextContent().trim());
+            }
 
         } while(!n.getTextContent().equals(" ; "));
+        vw.writeret();
+
         //System.out.println("exit compile return");
     }
-
-    public void CompileIf(Element statements, Document doc) {
+    
+    public void CompileIf(Element statements, Document doc, int ifcount) {
         //System.out.println("enter compile if");
         Element ifStatement = doc.createElement("ifStatement");
         statements.appendChild(ifStatement);
         Node n;
+        ifcount = ifcount + 1;
+        //System.out.println(ifcount);
         do {
             n = getNextToken("next");
             ifStatement.appendChild(doc.importNode(n, true));
             if(n.getTextContent().equals(" ( ")) {
                 CompileExpression(ifStatement, doc, n.getTextContent());
+                vw.writeif("IF_TRUE" + ifcount);
+                vw.writegoto("IF_FALSE" + ifcount);
+                vw.writelabel("IF_TRUE" + ifcount);
             }
         } while(!n.getTextContent().equals(" ) "));
         int flag = 0;
@@ -347,20 +434,31 @@ public class CompilationEngine {
             flag = 1;
         }
         CompileStatement(ifStatement, doc);
+        
         if(flag == 1) {
             n = getNextToken("next");
             ifStatement.appendChild(doc.importNode(n, true));
         }
         n = getNextToken("check");
+        int e = 0;
         if(n.getTextContent().equals(" else ")) {
+            vw.writegoto("IF_END" + ifcount);
+            vw.writelabel("IF_FALSE" + ifcount);
+            e=1;
             ifStatement.appendChild(doc.importNode(getNextToken("next"), true));
             if(getNextToken("check").getTextContent().equals(" { ")) {
                 ifStatement.appendChild(doc.importNode(getNextToken("next"), true));
             }
 
             CompileStatement(ifStatement, doc);
+            vw.writelabel("IF_END" + ifcount);
             ifStatement.appendChild(doc.importNode(getNextToken("next"), true));
         }
+        if(e==0) {
+            vw.writelabel("IF_FALSE" + ifcount);
+            e=0;
+        }
+        
         //System.out.println("exit compile if");
     }
 
@@ -374,38 +472,67 @@ public class CompilationEngine {
         Element expression = doc.createElement("expression");
         exp.appendChild(expression);
         Node n;
+        String op = "";
         do {
             n = getNextToken("check");
             String p = n.getNodeName();
-            
             if(list.contains(p) || list.contains(n.getTextContent())) {
                 CompileTerm(expression, doc, " ");
             } else if(n.getTextContent().equals(" ( ")){
                 CompileTerm(expression, doc, "term");
             } else if(!expression.hasChildNodes() && (n.getTextContent().equals(" - ") || n.getTextContent().equals(" ~ "))) {
-
                 CompileTerm(expression, doc, "op");
-            } else {   
-                expression.appendChild(doc.importNode(getNextToken("next"), true));
+                vw.writeuniop(n.getTextContent().trim());
+            } else {
+                n = getNextToken("next");   
+                expression.appendChild(doc.importNode(n, true));
+                op = n.getTextContent().trim();
+                continue;
+            }
+
+            if(!op.equals("")) {
+                vw.writearith(op);
+                op="";
             }
         } while(!getNextToken("check").getTextContent().equals(" ) ")
                 && !getNextToken("check").getTextContent().equals(" ] ")
                 && !getNextToken("check").getTextContent().equals(" ; ")
                 && !getNextToken("check").getTextContent().equals(" , "));
         //System.out.println("exit compile expressiom");
+        
     }
-
     public void CompileTerm(Element expression, Document doc, String s) {
 
         //System.out.println("entered compile term");
         Element term = doc.createElement("term");
         expression.appendChild(term);
+        int check = 0;
+        int a = 0;
+        String temp="";
         Node n;
         do {
             n = getNextToken("next");
             term.appendChild(doc.importNode(n, true));
+            if(n.getTextContent().equals(" . ")) {
+                check = 1;
+            }
+            if(getNextToken("check").getTextContent().equals(" . ")) {
+                temp += n.getTextContent();
+                if(!st.gettype(n.getTextContent().trim()).equals("")) {
+                    a = 1;
+                }
+            }
             if(n.getTextContent().equals(" ( ") && !s.equals("term")) {
-               CompileExpressionList(term, doc);
+                countexpressionlist=0;
+                if(check == 0) {
+                    vw.writemethodcall();
+                }
+                if(a == 1) {
+                    vw.writeobjectmethodcall(temp); 
+                }
+                a=0;
+                CompileExpressionList(term, doc);
+                check = 0;
             }
             else if(n.getTextContent().equals(" [ ") || s.equals("term")  ) {
                 CompileExpression(term, doc, null);
@@ -423,9 +550,12 @@ public class CompilationEngine {
                 && !getNextToken("check").getTextContent().equals(" ) ")
                 && !getNextToken("check").getTextContent().equals(" ] ")
                 && !getNextToken("check").getTextContent().equals(" , "));
+
+        
+        vw.writeterm(term);
         //System.out.println("exit compile term");
     } 
-
+    
     public void CompileExpressionList (Element term, Document doc) {
         //System.out.println("entered compile list");
         Element explist = doc.createElement("expressionList");
@@ -436,9 +566,11 @@ public class CompilationEngine {
         } else {
             do {
                 CompileExpression(explist, doc, null);
+                countexpressionlist++;
                 if(getNextToken("check").getTextContent().equals(" , ")) {
                     explist.appendChild(doc.importNode(getNextToken("next"), true));
                 }
+
             } while(!getNextToken("check").getTextContent().equals(" ) ")); 
 
             //System.out.println("awersdtfcgvhjbknl,gjmvfcf");
