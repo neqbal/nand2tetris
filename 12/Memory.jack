@@ -9,26 +9,95 @@
  * consists of 32,768 words, each holding a 16-bit binary number.
  */ 
 class Memory {
+    static Array segment;
 
     /** Initializes the class. */
     function void init() {
+        let segment = 0;
+        let segment[2048] = 14433;
+        let segment[2049] = 2050;
+        return;
     }
 
     /** Returns the RAM value at the given address. */
     function int peek(int address) {
+        var int a;
+        let a = address[0];
+        return a;
     }
 
     /** Sets the RAM value at the given address to the given value. */
     function void poke(int address, int value) {
+        var int a;
+        var int index;
+
+        let a = 2048;
+        let index = address - a;
+        let a[index] = value;
+
+        return ;
     }
 
     /** Finds an available RAM block of the given size and returns
      *  a reference to its base address. */
     function int alloc(int size) {
+        var int a;
+        var int b;
+        if(size < 0) {
+
+        } else {
+            let a = 2048;
+            while((a<16483) & (a[0] < size)) {
+                let b = a[1]; 
+                if(((a[0] = 0) | (b > 16483)) | (b[0] = 0) ) {
+                    let a = b;
+                } else {
+                    let a[0] = a[0] + b[0] + 2;
+                    if((b[0] + b[1]) = 16483) {
+                        let a[1] = a + 2;
+                    } else {
+                        let a[1] = b[1];
+                    }
+
+                    let b[0] = 0;
+                    let b[1] = 0;
+                }
+            }
+
+            if((a[0] + a[1]) = 16483) {
+                let a[2 + size] = a[0] - size - 2;
+                let a[3 + size] = a + 4 + size; 
+
+                let a[0] = 0;
+                let a[1] = a + 2 + size;
+            } else {
+                if(a[0] = size) {
+                    let a[0] = 0;
+                } else {
+                    let a[a[0] - size] = 0;
+                    let a[a[0] - size + 1] = a[1];
+
+                    let a[0] = a[0] - size - 2;
+                    let a[1] = a[1] - size - 2;
+
+                    let a = a[1];
+                }
+            }
+        }
+        return a + 2;
     }
 
     /** De-allocates the given object (cast as an array) by making
      *  it available for future allocations. */
     function void deAlloc(Array o) {
+        var int a;
+        var int length;
+        var int i;
+
+        let a = 0;
+        let length = a[o-1] - o;
+        let a[o-2] = length;
+        let a = o;
+        return;
     }    
 }

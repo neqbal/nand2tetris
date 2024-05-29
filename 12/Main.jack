@@ -1,0 +1,42 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/MathTest/Main.jack
+
+// Tests the OS Math class.
+class Main {
+
+    // Performs various mathematical operations, using calls to the Math class methods.
+    function void main() {
+        do Screen.setColor(true);
+        /*do Screen.drawLine(0,220,511,220);        // base line
+        do Screen.drawRectangle(280,90,410,220);
+
+        do Screen.setColor(false); 
+        do Screen.drawRectangle(350,120,390,219); // door
+        do Screen.drawRectangle(292,120,332,150);*/
+
+        do Screen.setColor(true); 
+        do Screen.drawLine(280,90,345,35);        // roof
+        /*do Screen.drawPixel(280, 90);
+        do Screen.drawPixel(281,89);
+        do Screen.drawPixel(282,88);
+        do Screen.drawPixel(283,87);
+        do Screen.drawPixel(284,86);
+        do Screen.drawPixel(285,85);
+        do Screen.drawPixel(286,84);
+        do Screen.drawPixel(287,83);
+        do Screen.drawPixel(288,82);
+        do Screen.drawPixel(289,81);
+        do Screen.drawPixel(290,80);
+        do Screen.drawPixel(291,79);
+        do Screen.drawPixel(345,35);
+        do Screen.drawPixel(344,36);
+        do Screen.drawPixel(343,37);
+        do Screen.drawPixel(342,38);
+        do Screen.drawPixel(341,39);
+        do Screen.drawPixel(340,40);*/
+        do Screen.drawLine(345,35,410,90);  
+        return;
+    }
+}
